@@ -77,14 +77,18 @@ if st.sidebar.button("🗑️ Reiniciar Día"):
 
 # --- CONEXIÓN CON GEMINI IA ---
 GOOGLE_API_KEY = "AIzaSyA5us9JOGnPGbt2egMFYnbibuKwDScLOn8" 
+# Configuración global
 genai.configure(api_key=GOOGLE_API_KEY)
 
 def analizar_plato_ia(img):
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Cambiamos a 'gemini-1.5-pro' que es más tolerante con peticiones de servidores externos sin tarjeta
+    model = genai.GenerativeModel('gemini-1.5-pro')
     prompt = """Analiza la comida de la imagen. Da un resumen muy breve de los alimentos encontrados.
     Al final de tu respuesta, debes escribir OBLIGATORIAMENTE el siguiente formato numérico estricto:
     VALORES -> CAL: [num], PROT: [num], CARB: [num], GRAS: [num]"""
-    res = model.generate_content([prompt, img])
+    
+    # Forzamos la API Key directamente dentro de la llamada por si Streamlit la limpia
+    res = model.generate_content([prompt, img], request_options={"api_key": GOOGLE_API_KEY})
     return res.text
 
 # --- ESTRUCTURA DE LA INTERFAZ ---
