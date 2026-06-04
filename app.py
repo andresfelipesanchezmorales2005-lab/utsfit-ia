@@ -83,6 +83,19 @@ GOOGLE_API_KEY = st.secrets["GEMINI_API_KEY"]
 # Inicializamos el cliente moderno de Google con la clave segura
 client = genai.Client(api_key=GOOGLE_API_KEY)
 
+# ESTA ES LA FUNCIÓN QUE FALTABA:
+def analizar_plato_ia(img):
+    prompt = """Analiza la comida de la imagen. Da un resumen muy breve de los alimentos encontrados.
+    Al final de tu respuesta, debes escribir OBLIGATORIAMENTE el siguiente formato numérico estricto:
+    VALORES -> CAL: [num], PROT: [num], CARB: [num], GRAS: [num]"""
+    
+    # Llamada oficial usando el cliente moderno
+    res = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=[prompt, img]
+    )
+    return res.text
+
 # --- ESTRUCTURA DE LA INTERFAZ ---
 st.title("🍎 UTSFIT IA")
 
