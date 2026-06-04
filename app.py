@@ -123,7 +123,8 @@ with col_camara:
                     st.session_state.historial.append(f"Plato: {numeros[0]}kcal | P: {numeros[1]}g | C: {numeros[2]}g | G: {numeros[3]}g")
                     st.success("¡Nutrientes sumados al día!")
             except Exception as e:
-                st.error("Hubo un problema con la IA. Comprueba tu internet.")
+                # Esto nos mostrará el error técnico real en el recuadro rojo
+                st.error(f"Error real detectado: {e}")
 
 with col_resumen:
     st.header("📊 Resumen del Día")
