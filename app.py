@@ -1,5 +1,6 @@
 import streamlit as st
-import google.generativeai as genai
+# Cambia esto: import google.generativeai as genai
+from google import genai
 from PIL import Image
 import base64
 import os
@@ -77,18 +78,20 @@ if st.sidebar.button("🗑️ Reiniciar Día"):
 
 # --- CONEXIÓN CON GEMINI IA ---
 GOOGLE_API_KEY = "AIzaSyA5us9JOGnPGbt2egMFYnbibuKwDScLOn8" 
-# Configuración global
-genai.configure(api_key=GOOGLE_API_KEY)
+
+# Inicializamos el cliente moderno de Google con la clave
+client = genai.Client(api_key=GOOGLE_API_KEY)
 
 def analizar_plato_ia(img):
-    # Cambiamos a 'gemini-1.5-pro' que es más tolerante con peticiones de servidores externos sin tarjeta
-    model = genai.GenerativeModel('gemini-1.5-pro')
     prompt = """Analiza la comida de la imagen. Da un resumen muy breve de los alimentos encontrados.
     Al final de tu respuesta, debes escribir OBLIGATORIAMENTE el siguiente formato numérico estricto:
     VALORES -> CAL: [num], PROT: [num], CARB: [num], GRAS: [num]"""
     
-    # Forzamos la API Key directamente dentro de la llamada por si Streamlit la limpia
-    res = model.generate_content([prompt, img], request_options={"api_key": GOOGLE_API_KEY})
+    # Llamada oficial usando el cliente moderno
+    res = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=[prompt, img]
+    )
     return res.text
 
 # --- ESTRUCTURA DE LA INTERFAZ ---
